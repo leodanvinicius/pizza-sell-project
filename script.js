@@ -1,4 +1,6 @@
+let cart = [];
 let modalQt = 1;
+let modalKey = 0;
 
 const c = (element) => document.querySelector(element);
 const ca = (element) => document.querySelectorAll(element);
@@ -16,6 +18,7 @@ pizzaJson.map(function(item, index) {
         event.preventDefault();
         let key = event.target.closest('.pizza-item').getAttribute('data-key');
         modalQt = 1;
+        modalKey = key;
 
         c('.pizzaBig img').src = pizzaJson[key].img;
         c('.pizzaInfo h1').innerHTML = pizzaJson[key].name;
@@ -43,7 +46,7 @@ pizzaJson.map(function(item, index) {
 });
 
 //Eventos do modal
-let close = () => {
+let closeModal = () => {
     c('.pizzaWindowArea').style.opacity = 0;
     setTimeout(() => {
         c('.pizzaWindowArea').style.display = 'none';
@@ -51,7 +54,7 @@ let close = () => {
 };
 
 ca('.pizzaInfo--cancelButton, .pizzaInfo--cancelMobileButton').forEach((item) => {
-    item.addEventListener('click', close);
+    item.addEventListener('click', closeModal);
 });
 
 c('.pizzaInfo--qtmenos').addEventListener('click', () => {
@@ -73,3 +76,28 @@ ca('.pizzaInfo--size').forEach((size, sizeIndex) => {
         size.classList.add('selected');
     });
 });
+
+c('.pizzaInfo--addButton').addEventListener('click', () => {
+    let size = parseInt(c('.pizzaInfo--size.selected').getAttribute('data-key'));
+
+    let identifier = pizzaJson[modalKey].id + '@' + size;
+
+    let key = cart.findIndex((item) => {
+        return item.identifier == identifier
+    });
+
+    if (key > -1) {
+        cart[key].qt += modalQt;
+    } else {
+        cart.push({
+            identifier,
+            id: pizzaJson[modalKey].id,
+            size,
+            qt: modalQt
+        });
+    }
+
+
+    closeModal();
+
+})
