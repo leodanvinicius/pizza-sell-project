@@ -97,8 +97,8 @@ c('.pizzaInfo--addButton').addEventListener('click', () => {
         });
     };
 
-    updateCart();
-    closeModal();
+    updateCart()
+    closeModal()
 
 });
 
